@@ -30,13 +30,6 @@
       <!-- Хедер -->
       <header class="content-header">
         <div class="header-actions">
-          <div class="search-box">
-            <input 
-              type="text" 
-              placeholder="Поиск документов..." 
-              class="search-input"
-            >
-          </div>
           <div class="header-buttons">
             <div class="user-menu">
               <span class="user-name">Иван Иванов</span>

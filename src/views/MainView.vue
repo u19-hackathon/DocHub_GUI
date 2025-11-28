@@ -8,19 +8,19 @@
       <nav class="sidebar-nav">
         <router-link to="/" class="nav-item" :class="{ active: $route.name === 'Home' }">
           <span class="nav-icon">📊</span>
-          Dashboard
+          Дашборд
         </router-link>
         <router-link to="/documents" class="nav-item" :class="{ active: $route.name === 'Documents' }">
           <span class="nav-icon">📄</span>
-          Documents
+          Документы
         </router-link>
         <router-link to="/analytics" class="nav-item" :class="{ active: $route.name === 'Analytics' }">
           <span class="nav-icon">📈</span>
-          Analytics
+          Аналитика
         </router-link>
         <a href="#" class="nav-item">
           <span class="nav-icon">⚙️</span>
-          Settings
+          Настройки
         </a>
       </nav>
     </aside>
@@ -33,7 +33,7 @@
           <div class="search-box">
             <input 
               type="text" 
-              placeholder="Search documents..." 
+              placeholder="Поиск документов..." 
               class="search-input"
             >
           </div>
@@ -53,27 +53,27 @@
       <div class="filters-section">
         <div class="filters-grid">
           <div class="filter-group">
-            <label>Type</label>
+            <label>Тип</label>
             <select class="filter-select">
-              <option>Any</option>
+              <option>Любой</option>
               <option>Договор</option>
               <option>Счёт</option>
               <option>Акт</option>
             </select>
           </div>
           <div class="filter-group">
-            <label>Tag</label>
+            <label>Тег</label>
             <select class="filter-select">
-              <option>Any</option>
+              <option>Любой</option>
               <option>Юридический</option>
               <option>Кадровый</option>
               <option>Финансовый</option>
             </select>
           </div>
           <div class="filter-group">
-            <label>Counterparty</label>
+            <label>Компания</label>
             <select class="filter-select">
-              <option>All</option>
+              <option>Все</option>
               <option>ООО "Ромашка"</option>
               <option>ООО "Вектор"</option>
             </select>
@@ -85,15 +85,15 @@
       <div class="main-content">
         <div class="documents-section">
           <div class="section-header">
-            <h2>Documents</h2>
+            <h2>Документы</h2>
           </div>
           
           <!-- Заголовки таблицы -->
           <div class="documents-header">
-            <div class="doc-header-column">Document</div>
-            <div class="doc-header-column">Type</div>
-            <div class="doc-header-column">Counterparty</div>
-            <div class="doc-header-column">Date</div>
+            <div class="doc-header-column">Документ</div>
+            <div class="doc-header-column">Тип</div>
+            <div class="doc-header-column">Компания</div>
+            <div class="doc-header-column">Дата</div>
           </div>
 
           <!-- Список документов -->
@@ -113,7 +113,7 @@
                 </div>
               </div>
               <div class="doc-column doc-type">{{ document.type }}</div>
-              <div class="doc-column doc-counterparty">{{ document.counterparty }}</div>
+              <div class="doc-column doc-company">{{ document.company }}</div>
               <div class="doc-column doc-date">{{ document.date }}</div>
             </div>
           </div>
@@ -132,23 +132,23 @@
               <span>{{ selectedDocument.id }}</span>
             </div>
             <div class="detail-item">
-              <label>Type</label>
+              <label>Тип</label>
               <span>{{ selectedDocument.type }}</span>
             </div>
             <div class="detail-item">
-              <label>Counterparty</label>
-              <span>{{ selectedDocument.counterparty }}</span>
+              <label>Компания</label>
+              <span>{{ selectedDocument.company }}</span>
             </div>
             <div class="detail-item">
-              <label>Date</label>
+              <label>Дата</label>
               <span>{{ selectedDocument.date }}</span>
             </div>
             <div class="detail-item">
-              <label>Status</label>
+              <label>Статус</label>
               <span class="status-badge">{{ selectedDocument.status }}</span>
             </div>
             <div class="detail-item tags">
-              <label>Tags</label>
+              <label>Теги</label>
               <div class="tags-list">
                 <span 
                   v-for="tag in selectedDocument.tags" 
@@ -244,7 +244,7 @@ export default {
           title: 'Договор поставки',
           filename: 'Договор №154/2024.pdf',
           type: 'Договор поставки',
-          counterparty: 'ООО "Ромашка"',
+          company: 'ООО "Ромашка"',
           date: '12.02.2024',
           status: 'На оплате',
           tags: ['Проект X', 'Юридический', 'Поставка']
@@ -254,7 +254,7 @@ export default {
           title: 'Счёт на оплату',
           filename: 'Счёт №287.pdf',
           type: 'Счёт',
-          counterparty: 'ООО "Вектор"',
+          company: 'ООО "Вектор"',
           date: '23.03.2024',
           status: 'Оплачен',
           tags: ['Финансовый', 'Срочный']
