@@ -70,6 +70,15 @@ body {
   width: 100%;
 }
 
+.btn-secondary {
+  background-color: var(--secondary-color, #6c757d);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-hover, #5a6268);
+}
+
 /* Глобальные классы для форм */
 .form-group {
   margin-bottom: var(--spacing-md);

@@ -43,6 +43,16 @@
             <span v-else>Войти</span>
           </button>
         </form>
+
+        <div class="register-section">
+          <p class="register-text">Нет аккаунта?</p>
+          <button 
+            @click="goToRegister" 
+            class="btn btn-secondary register-btn"
+          >
+            Зарегистрироваться
+          </button>
+        </div>
         
         <div class="demo-credentials">
           <p><strong>Демо доступ:</strong></p>
@@ -89,6 +99,10 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    
+    goToRegister() {
+      this.$router.push('/register')
     }
   }
 }

@@ -1,6 +1,5 @@
 @import '../variables.css';
 
-
 .login-view {
   min-height: 100vh;
   display: flex;
@@ -75,6 +74,7 @@
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  margin-bottom: 15px;
 }
 
 .login-btn:hover:not(:disabled) {
@@ -84,6 +84,35 @@
 .login-btn:disabled {
   background: #bdc3c7;
   cursor: not-allowed;
+}
+
+.register-section {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.register-text {
+  color: #7f8c8d;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.register-btn {
+  width: 100%;
+  padding: 12px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.register-btn:hover {
+  background: #5a6268;
 }
 
 .error-message {

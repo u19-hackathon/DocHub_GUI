@@ -25,24 +25,30 @@
       </nav>
     </aside>
 
-    <!-- Основной контент -->
-    <main class="content">
-      <!-- Хедер -->
-      <header class="content-header">
-        <div class="header-actions">
-          <div class="search-box">
-            <input 
-              type="text" 
-              placeholder="Search documents..." 
-              class="search-input"
-            >
-          </div>
+  <!-- Основной контент -->
+  <main class="content">
+    <!-- Хедер -->
+    <header class="content-header">
+      <div class="header-actions">
+        <div class="search-box">
+          <input 
+            type="text" 
+            placeholder="Search documents..." 
+            class="search-input"
+          >
+        </div>
+        <button @click="uploadDocument" class="btn btn-primary upload-btn">
+            📎 Загрузить документ
+          </button>
+        <div class="header-buttons">
+          
           <div class="user-menu">
             <span class="user-name">Иван Иванов</span>
             <button @click="handleLogout" class="logout-btn">Выйти</button>
           </div>
         </div>
-      </header>
+      </div>
+    </header>
 
       <!-- Фильтры -->
       <div class="filters-section">
@@ -214,6 +220,21 @@ export default {
   methods: {
     handleLogout() {
       this.$router.push('/login')
+    },
+    viewDocuments() {
+      // Здесь будет логика просмотра документов
+      alert('Функция просмотра документов будет реализована позже')
+      console.log('Переход к просмотру документов')
+    },
+    uploadDocument() {
+      // Здесь будет логика загрузки документов
+      alert('Функция загрузки документов будет реализована позже')
+      console.log('Открытие формы загрузки документа')
+    },
+    viewStatistics() {
+      // Здесь будет логика просмотра статистики
+      alert('Функция просмотра статистики будет реализована позже')
+      console.log('Переход к статистике документов')
     },
     selectDocument(document) {
       this.selectedDocument = document
