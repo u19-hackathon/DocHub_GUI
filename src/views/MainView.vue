@@ -25,30 +25,29 @@
       </nav>
     </aside>
 
-  <!-- Основной контент -->
-  <main class="content">
-    <!-- Хедер -->
-    <header class="content-header">
-      <div class="header-actions">
-        <div class="search-box">
-          <input 
-            type="text" 
-            placeholder="Search documents..." 
-            class="search-input"
-          >
-        </div>
-        <button @click="uploadDocument" class="btn btn-primary upload-btn">
-            📎 Загрузить документ
-          </button>
-        <div class="header-buttons">
-          
-          <div class="user-menu">
-            <span class="user-name">Иван Иванов</span>
-            <button @click="handleLogout" class="logout-btn">Выйти</button>
+    <!-- Основной контент -->
+    <main class="content">
+      <!-- Хедер -->
+      <header class="content-header">
+        <div class="header-actions">
+          <div class="search-box">
+            <input 
+              type="text" 
+              placeholder="Search documents..." 
+              class="search-input"
+            >
+          </div>
+          <button @click="showUploadModal = true" class="btn btn-primary upload-btn">
+              📎 Загрузить документ
+            </button>
+          <div class="header-buttons">
+            <div class="user-menu">
+              <span class="user-name">Иван Иванов</span>
+              <button @click="handleLogout" class="logout-btn">Выйти</button>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
 
       <!-- Фильтры -->
       <div class="filters-section">
@@ -164,6 +163,69 @@
         </div>
       </div>
     </main>
+
+    <!-- Модальное окно загрузки документов -->
+    <div v-if="showUploadModal" class="upload-modal-overlay" @click="showUploadModal = false">
+      <div class="upload-modal" @click.stop>
+        <div class="upload-modal-header">
+          <h2>Загрузка документов</h2>
+          <button class="close-btn" @click="showUploadModal = false">×</button>
+        </div>
+        
+        <div class="upload-area" 
+             @dragover.prevent="dragOver = true"
+             @dragleave="dragOver = false"
+             @drop="handleFileDrop"
+             :class="{ 'drag-over': dragOver }">
+          <div class="upload-icon">📤</div>
+          <h3>Перетащите файлы сюда</h3>
+          <p>или</p>
+          <input 
+            type="file" 
+            ref="fileInput"
+            @change="handleFileSelect"
+            multiple 
+            class="file-input"
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png"
+          >
+          <button class="btn btn-outline" @click="triggerFileInput">
+            Выбрать файл
+          </button>
+        </div>
+
+        <!-- Список загружаемых файлов -->
+        <div class="upload-list" v-if="uploadQueue.length > 0">
+          <div class="upload-list-header">
+            <span>Идёт загрузка {{ uploadQueue.filter(f => f.status !== 'completed').length }} из {{ uploadQueue.length }}</span>
+          </div>
+          
+          <div class="upload-items">
+            <div v-for="file in uploadQueue" :key="file.id" class="upload-item">
+              <div class="file-info">
+                <div class="file-icon">📄</div>
+                <div class="file-details">
+                  <div class="file-name">{{ file.name }}</div>
+                  <div class="file-status">
+                    <span v-if="file.status === 'uploading'">Классификация...</span>
+                    <span v-else-if="file.status === 'processing'">Сканирование текста... {{ file.progress }}%</span>
+                    <span v-else-if="file.status === 'completed'" class="status-completed">Готово</span>
+                    <span v-else-if="file.status === 'waiting'" class="status-waiting">Ожидание</span>
+                  </div>
+                </div>
+              </div>
+              <div class="file-actions">
+                <button v-if="file.status === 'waiting'" @click="removeFromQueue(file.id)" class="btn-remove">×</button>
+                <div v-else class="file-progress">
+                  <div v-if="file.status === 'uploading' || file.status === 'processing'" class="progress-bar">
+                    <div class="progress-fill" :style="{ width: file.progress + '%' }"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -173,6 +235,9 @@ export default {
   data() {
     return {
       selectedDocument: null,
+      showUploadModal: false,
+      dragOver: false,
+      uploadQueue: [],
       documents: [
         {
           id: '264917',
@@ -193,26 +258,6 @@ export default {
           date: '23.03.2024',
           status: 'Оплачен',
           tags: ['Финансовый', 'Срочный']
-        },
-        {
-          id: '264919',
-          title: 'Акт выполненных работ',
-          filename: 'Акт №45.pdf',
-          type: 'Акт',
-          counterparty: 'ООО "Ромашка"',
-          date: '19.02.2024',
-          status: 'Подписан',
-          tags: ['Проект X', 'Отчётность']
-        },
-        {
-          id: '264920',
-          title: 'Договор поставки',
-          filename: 'Договор №155.pdf',
-          type: 'Договор поставки',
-          counterparty: 'HR Department',
-          date: '15.03.2024',
-          status: 'Черновик',
-          tags: ['Кадровый', 'Внутренний']
         }
       ]
     }
@@ -221,27 +266,97 @@ export default {
     handleLogout() {
       this.$router.push('/login')
     },
-    viewDocuments() {
-      // Здесь будет логика просмотра документов
-      alert('Функция просмотра документов будет реализована позже')
-      console.log('Переход к просмотру документов')
-    },
-    uploadDocument() {
-      // Здесь будет логика загрузки документов
-      alert('Функция загрузки документов будет реализована позже')
-      console.log('Открытие формы загрузки документа')
-    },
-    viewStatistics() {
-      // Здесь будет логика просмотра статистики
-      alert('Функция просмотра статистики будет реализована позже')
-      console.log('Переход к статистике документов')
-    },
     selectDocument(document) {
       this.selectedDocument = document
+    },
+    
+    // Методы для загрузки документов
+    triggerFileInput() {
+      this.$refs.fileInput.click()
+    },
+    
+    handleFileSelect(event) {
+      const files = Array.from(event.target.files)
+      this.addFilesToQueue(files)
+      event.target.value = '' // Сбрасываем input
+    },
+    
+    handleFileDrop(event) {
+      this.dragOver = false
+      const files = Array.from(event.dataTransfer.files)
+      this.addFilesToQueue(files)
+    },
+    
+    addFilesToQueue(files) {
+      files.forEach(file => {
+        const fileItem = {
+          id: Date.now() + Math.random(),
+          name: file.name,
+          file: file,
+          status: 'waiting',
+          progress: 0
+        }
+        this.uploadQueue.push(fileItem)
+      })
+      
+      // Автоматически начинаем загрузку
+      this.processUploadQueue()
+    },
+    
+    async processUploadQueue() {
+      const waitingFiles = this.uploadQueue.filter(f => f.status === 'waiting')
+      
+      for (const fileItem of waitingFiles) {
+        fileItem.status = 'uploading'
+        
+        // Имитация загрузки
+        await this.simulateUpload(fileItem)
+        
+        // После загрузки - классификация
+        fileItem.status = 'processing'
+        await this.simulateProcessing(fileItem)
+        
+        // Завершено
+        fileItem.status = 'completed'
+        fileItem.progress = 100
+      }
+    },
+    
+    simulateUpload(fileItem) {
+      return new Promise((resolve) => {
+        let progress = 0
+        const interval = setInterval(() => {
+          progress += 10
+          fileItem.progress = progress
+          
+          if (progress >= 100) {
+            clearInterval(interval)
+            resolve()
+          }
+        }, 200)
+      })
+    },
+    
+    simulateProcessing(fileItem) {
+      return new Promise((resolve) => {
+        let progress = 0
+        const interval = setInterval(() => {
+          progress += 15
+          fileItem.progress = progress
+          
+          if (progress >= 100) {
+            clearInterval(interval)
+            resolve()
+          }
+        }, 300)
+      })
+    },
+    
+    removeFromQueue(fileId) {
+      this.uploadQueue = this.uploadQueue.filter(f => f.id !== fileId)
     }
   },
   mounted() {
-    // Автоматически выбираем первый документ при загрузке
     if (this.documents.length > 0) {
       this.selectedDocument = this.documents[0]
     }

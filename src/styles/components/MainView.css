@@ -318,3 +318,254 @@
   border-radius: 12px;
   font-size: 11px;
 }
+
+/* Модальное окно загрузки */
+.upload-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.upload-modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.upload-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.upload-modal-header h2 {
+  margin: 0;
+  color: var(--text-dark);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--text-gray);
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.close-btn:hover {
+  background: #f5f5f5;
+  color: var(--text-dark);
+}
+
+/* Область перетаскивания */
+.upload-area {
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  padding: 60px 40px;
+  text-align: center;
+  margin: 24px;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.upload-area.drag-over {
+  border-color: var(--primary-color);
+  background: #f0f7ff;
+}
+
+.upload-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.upload-area h3 {
+  margin: 0 0 12px 0;
+  color: var(--text-dark);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.upload-area p {
+  margin: 12px 0;
+  color: var(--text-gray);
+}
+
+.file-input {
+  display: none;
+}
+
+.btn-outline {
+  background: white;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  padding: 10px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-outline:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Список загрузки */
+.upload-list {
+  margin: 0 24px 24px;
+}
+
+.upload-list-header {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 12px;
+}
+
+.upload-list-header span {
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.upload-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.upload-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.file-icon {
+  font-size: 20px;
+}
+
+.file-details {
+  flex: 1;
+}
+
+.file-name {
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.file-status {
+  font-size: 12px;
+  color: var(--text-gray);
+}
+
+.status-completed {
+  color: var(--success-color);
+  font-weight: 500;
+}
+
+.status-waiting {
+  color: #6c757d;
+}
+
+.file-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.btn-remove:hover {
+  background: #f8d7da;
+}
+
+/* Прогресс бар */
+.progress-bar {
+  width: 120px;
+  height: 6px;
+  background: #e9ecef;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--primary-color);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+  .upload-modal-overlay {
+    padding: 10px;
+  }
+  
+  .upload-modal {
+    max-height: 95vh;
+  }
+  
+  .upload-area {
+    padding: 40px 20px;
+    margin: 16px;
+  }
+  
+  .upload-modal-header,
+  .upload-list {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+  
+  .upload-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .file-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
