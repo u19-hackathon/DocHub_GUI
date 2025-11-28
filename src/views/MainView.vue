@@ -6,18 +6,18 @@
         <h1>DocHub</h1>
       </div>
       <nav class="sidebar-nav">
-        <a href="#" class="nav-item active">
+        <router-link to="/" class="nav-item" :class="{ active: $route.name === 'Home' }">
           <span class="nav-icon">📊</span>
           Dashboard
-        </a>
-        <a href="#" class="nav-item">
+        </router-link>
+        <router-link to="/documents" class="nav-item" :class="{ active: $route.name === 'Documents' }">
           <span class="nav-icon">📄</span>
           Documents
-        </a>
-        <a href="#" class="nav-item">
+        </router-link>
+        <router-link to="/analytics" class="nav-item" :class="{ active: $route.name === 'Analytics' }">
           <span class="nav-icon">📈</span>
           Analytics
-        </a>
+        </router-link>
         <a href="#" class="nav-item">
           <span class="nav-icon">⚙️</span>
           Settings
