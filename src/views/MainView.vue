@@ -7,10 +7,6 @@
       </div>
       <nav class="sidebar-nav">
         <router-link to="/" class="nav-item" :class="{ active: $route.name === 'Home' }">
-          <span class="nav-icon">📊</span>
-          Дашборд
-        </router-link>
-        <router-link to="/documents" class="nav-item" :class="{ active: $route.name === 'Documents' }">
           <span class="nav-icon">📄</span>
           Документы
         </router-link>
