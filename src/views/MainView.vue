@@ -18,10 +18,6 @@
           <span class="nav-icon">📈</span>
           Аналитика
         </router-link>
-        <a href="#" class="nav-item">
-          <span class="nav-icon">⚙️</span>
-          Настройки
-        </a>
       </nav>
     </aside>
 
