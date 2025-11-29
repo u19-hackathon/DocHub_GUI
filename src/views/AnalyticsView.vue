@@ -185,67 +185,107 @@ export default {
       selectedYear: new Date().getFullYear(),
       availableYears: [2025, 2024, 2023, 2022],
       documents: [
-        {
-          id: '264917',
-          title: 'Договор поставки',
-          filename: 'Договор №154/2024.pdf',
-          type: 'Договор поставки',
-          counterparty: 'ООО "Ромашка"',
-          date: '12.02.2025',
-          status: 'На оплате',
-          tags: ['Проект X', 'Юридический', 'Поставка']
-        },
-        {
-          id: '264918',
-          title: 'Счёт на оплату',
-          filename: 'Счёт №287.pdf',
-          type: 'Счёт',
-          counterparty: 'ООО "Вектор"',
-          date: '23.03.2024',
-          status: 'Оплачен',
-          tags: ['Финансовый', 'Срочный']
-        },
-        {
-          id: '264919',
-          title: 'Акт выполненных работ',
-          filename: 'Акт №45/2023.pdf',
-          type: 'Акт',
-          counterparty: 'ООО "Ромашка"',
-          date: '15.11.2023',
-          status: 'Подписан',
-          tags: ['Проект Y', 'Финансовый']
-        },
-        {
-          id: '264920',
-          title: 'Договор аренды',
-          filename: 'Договор №89/2022.pdf',
-          type: 'Договор аренды',
-          counterparty: 'ООО "Стройсервис"',
-          date: '05.08.2022',
-          status: 'Завершен',
-          tags: ['Аренда', 'Юридический']
-        },
-        {
-          id: '264921',
-          title: 'Счёт на оплату',
-          filename: 'Счёт №301.pdf',
-          type: 'Счёт',
-          counterparty: 'ООО "Ромашка"',
-          date: '18.06.2024',
-          status: 'Ожидает оплаты',
-          tags: ['Финансовый']
-        },
-        {
-          id: '264922',
-          title: 'Договор оказания услуг',
-          filename: 'Договор №201/2024.pdf',
-          type: 'Договор оказания услуг',
-          counterparty: 'ООО "ТехноПрофи"',
-          date: '10.04.2024',
-          status: 'Активен',
-          tags: ['Услуги', 'Технический']
-        }
-      ],
+      {
+        id: '1',
+        title: 'Договор поставки оборудования',
+        filename: 'dogovor_postavki_oborudovania.pdf',
+        type: 'Договор',
+        counterparty: 'ООО "ТехноПром"',
+        date: '15.03.2025',
+        status: 'Подписан',
+        tags: ['важный', 'юридический', 'поставка']
+      },
+      {
+        id: '2',
+        title: 'Счет на оплату услуг',
+        filename: 'schet_na_oplatu_456.pdf',
+        type: 'Счёт',
+        counterparty: 'ИП Сидоров А.В.',
+        date: '20.03.2025',
+        status: 'Оплачен',
+        tags: ['финансы', 'срочный']
+      },
+      {
+        id: '3',
+        title: 'Акт выполненных работ',
+        filename: 'akt_vypolnennyh_rabot_mart.docx',
+        type: 'Акт',
+        counterparty: 'ООО "СтройСервис"',
+        date: '25.03.2025',
+        status: 'Принят',
+        tags: ['отчетность', 'строительство']
+      },
+      {
+        id: '4',
+        title: 'Коммерческое предложение',
+        filename: 'kommercheskoe_predlozhenie_q1.pdf',
+        type: 'Коммерческое предложение',
+        counterparty: 'ООО "БизнесПартнер"',
+        date: '10.03.2025',
+        status: 'Отправлено',
+        tags: ['маркетинг', 'предложение']
+      },
+      {
+        id: '5',
+        title: 'Дополнительное соглашение',
+        filename: 'dop_soglashenie_1.pdf',
+        type: 'Договор',
+        counterparty: 'ООО "ТехноПром"',
+        date: '28.03.2025',
+        status: 'На согласовании',
+        tags: ['дополнительно', 'юридический']
+      },
+      {
+        id: '6',
+        title: 'Счет-фактура №123',
+        filename: 'schet_faktura_123.pdf',
+        type: 'Счёт-фактура',
+        counterparty: 'ИП Петров И.С.',
+        date: '18.03.2025',
+        status: 'Проведен',
+        tags: ['налоги', 'бухгалтерия']
+      },
+      {
+        id: '7',
+        title: 'Отчет по проекту',
+        filename: 'otchet_po_proektu_alpha.xlsx',
+        type: 'Отчёт',
+        counterparty: 'Внутренний',
+        date: '30.03.2024',
+        status: 'Утвержден',
+        tags: ['внутренний', 'отчет', 'проект']
+      },
+      {
+        id: '8',
+        title: 'Акт сверки',
+        filename: 'akt_sverki_mart.pdf',
+        type: 'Акт',
+        counterparty: 'ООО "ПартнерГрупп"',
+        date: '22.03.2024',
+        status: 'Согласован',
+        tags: ['бухгалтерия', 'сверка']
+      },
+      {
+        id: '9',
+        title: 'Договор аренды',
+        filename: 'dogovor_arendy_pomescheniya.pdf',
+        type: 'Договор',
+        counterparty: 'ООО "Арендодатель"',
+        date: '05.03.2024',
+        status: 'Действует',
+        tags: ['аренда', 'юридический', 'недвижимость']
+      },
+      {
+        id: '10',
+        title: 'Спецификация к договору',
+        filename: 'specifikaciya_k_dogovoru.docx',
+        type: 'Спецификация',
+        counterparty: 'ООО "ТехноПром"',
+        date: '15.03.2024',
+        status: 'Приложен',
+        tags: ['приложение', 'детали']
+      }
+    ],
       statistics: {
         total: 0,
         yearly: 0,
