@@ -22,11 +22,9 @@
       <!-- Хедер -->
       <header class="content-header">
         <div class="header-actions">
-          <div class="header-buttons">
-            <div class="user-menu">
-              <span class="user-name">Иван Иванов</span>
-              <button @click="handleLogout" class="logout-btn">Выйти</button>
-            </div>
+          <div class="user-menu">
+            <span class="user-name">Иван Иванов</span>
+            <button @click="handleLogout" class="logout-btn">Выйти</button>
           </div>
         </div>
       </header>
@@ -81,8 +79,8 @@
             <div class="stat-card">
               <div class="stat-icon">👥</div>
               <div class="stat-info">
-                <div class="stat-value">{{ companiesCount }}</div>
-                <div class="stat-label">Компаний</div>
+                <div class="stat-value">{{ counterpartiesCount }}</div>
+                <div class="stat-label">Контрагентов</div>
               </div>
             </div>
           </div>
@@ -117,29 +115,29 @@
               </div>
             </div>
 
-            <!-- Компании -->
+            <!-- Контрагенты -->
             <div class="analytics-column">
               <div class="analytics-card">
                 <div class="analytics-header">
-                  <h3>Топ компаний</h3>
+                  <h3>Топ контрагентов</h3>
                 </div>
                 <div class="analytics-content">
                   <div 
-                    v-for="company in topCompanies" 
-                    :key="company.name"
-                    class="company-item"
+                    v-for="counterparty in topCounterparties" 
+                    :key="counterparty.name"
+                    class="counterparty-item"
                   >
-                    <div class="company-info">
-                      <span class="company-name">{{ company.name }}</span>
-                      <span class="company-count">{{ company.count }}</span>
+                    <div class="counterparty-info">
+                      <span class="counterparty-name">{{ counterparty.name }}</span>
+                      <span class="counterparty-count">{{ counterparty.count }}</span>
                     </div>
-                    <div class="company-bar">
+                    <div class="counterparty-bar">
                       <div 
-                        class="company-bar-fill" 
-                        :style="{ width: company.percentage + '%' }"
+                        class="counterparty-bar-fill" 
+                        :style="{ width: counterparty.percentage + '%' }"
                       ></div>
                     </div>
-                    <span class="company-percentage">{{ company.percentage }}%</span>
+                    <span class="counterparty-percentage">{{ counterparty.percentage }}%</span>
                   </div>
                 </div>
               </div>
@@ -155,19 +153,19 @@
                   <div 
                     v-for="status in statusDistribution" 
                     :key="status.name"
-                    class="status-item"
+                    class="distribution-item"
                   >
-                    <div class="status-info">
-                      <span class="status-name">{{ status.name + ' ' }}</span>
-                      <span class="status-count">{{ status.count }} шт.</span>
+                    <div class="distribution-info">
+                      <span class="distribution-name">{{ status.name }}</span>
+                      <span class="distribution-count">{{ status.count }}</span>
                     </div>
-                    <div class="status-bar">
+                    <div class="distribution-bar">
                       <div 
-                        class="status-bar-fill" 
+                        class="distribution-bar-fill" 
                         :style="{ width: status.percentage + '%' }"
                       ></div>
                     </div>
-                    <span class="status-percentage">{{ status.percentage }}%</span>
+                    <span class="distribution-percentage">{{ status.percentage }}%</span>
                   </div>
                 </div>
               </div>
@@ -192,7 +190,7 @@ export default {
           title: 'Договор поставки',
           filename: 'Договор №154/2024.pdf',
           type: 'Договор поставки',
-          company: 'ООО "Ромашка"',
+          counterparty: 'ООО "Ромашка"',
           date: '12.02.2025',
           status: 'На оплате',
           tags: ['Проект X', 'Юридический', 'Поставка']
@@ -202,7 +200,7 @@ export default {
           title: 'Счёт на оплату',
           filename: 'Счёт №287.pdf',
           type: 'Счёт',
-          company: 'ООО "Вектор"',
+          counterparty: 'ООО "Вектор"',
           date: '23.03.2024',
           status: 'Оплачен',
           tags: ['Финансовый', 'Срочный']
@@ -212,7 +210,7 @@ export default {
           title: 'Акт выполненных работ',
           filename: 'Акт №45/2023.pdf',
           type: 'Акт',
-          company: 'ООО "Ромашка"',
+          counterparty: 'ООО "Ромашка"',
           date: '15.11.2023',
           status: 'Подписан',
           tags: ['Проект Y', 'Финансовый']
@@ -222,7 +220,7 @@ export default {
           title: 'Договор аренды',
           filename: 'Договор №89/2022.pdf',
           type: 'Договор аренды',
-          company: 'ООО "Стройсервис"',
+          counterparty: 'ООО "Стройсервис"',
           date: '05.08.2022',
           status: 'Завершен',
           tags: ['Аренда', 'Юридический']
@@ -232,7 +230,7 @@ export default {
           title: 'Счёт на оплату',
           filename: 'Счёт №301.pdf',
           type: 'Счёт',
-          company: 'ООО "Ромашка"',
+          counterparty: 'ООО "Ромашка"',
           date: '18.06.2024',
           status: 'Ожидает оплаты',
           tags: ['Финансовый']
@@ -242,7 +240,7 @@ export default {
           title: 'Договор оказания услуг',
           filename: 'Договор №201/2024.pdf',
           type: 'Договор оказания услуг',
-          company: 'ООО "ТехноПрофи"',
+          counterparty: 'ООО "ТехноПрофи"',
           date: '10.04.2024',
           status: 'Активен',
           tags: ['Услуги', 'Технический']
@@ -252,9 +250,9 @@ export default {
         total: 0,
         yearly: 0,
         typesCount: 0,
-        companiesCount: 0,
+        counterpartiesCount: 0,
         typeDistribution: [],
-        topCompanies: [],
+        topCounterparties: [],
         statusDistribution: []
       }
     }
@@ -269,14 +267,14 @@ export default {
     documentTypesCount() {
       return this.statistics.typesCount;
     },
-    companiesCount() {
-      return this.statistics.companiesCount;
+    counterpartiesCount() {
+      return this.statistics.counterpartiesCount;
     },
     typeDistribution() {
       return this.statistics.typeDistribution;
     },
-    topCompanies() {
-      return this.statistics.topCompanies;
+    topCounterparties() {
+      return this.statistics.topCounterparties;
     },
     statusDistribution() {
       return this.statistics.statusDistribution;
@@ -287,26 +285,22 @@ export default {
       this.$router.push('/login');
     },
     updateStatistics() {
-      // Фильтрация документов по году
       const filteredDocs = this.documents.filter(doc => {
         const docYear = new Date(this.parseDate(doc.date)).getFullYear();
         return this.selectedYear === 'all' || docYear === this.selectedYear;
       });
 
-      // Общая статистика
       this.statistics.total = this.documents.length;
       this.statistics.yearly = filteredDocs.length;
 
-      // Уникальные типы и компании
       const uniqueTypes = new Set(filteredDocs.map(doc => doc.type));
-      const uniqueCompanies = new Set(filteredDocs.map(doc => doc.company));
+      const uniqueCounterparties = new Set(filteredDocs.map(doc => doc.counterparty));
       
       this.statistics.typesCount = uniqueTypes.size;
-      this.statistics.companiesCount = uniqueCompanies.size;
+      this.statistics.counterpartiesCount = uniqueCounterparties.size;
 
-      // Распределения
       this.calculateTypeDistribution(filteredDocs);
-      this.calculateCompanyStats(filteredDocs);
+      this.calculateCounterpartyStats(filteredDocs);
       this.calculateStatusDistribution(filteredDocs);
     },
     calculateTypeDistribution(docs) {
@@ -326,23 +320,23 @@ export default {
         }))
         .sort((a, b) => b.count - a.count);
     },
-    calculateCompanyStats(docs) {
-      const companyCounts = {};
+    calculateCounterpartyStats(docs) {
+      const counterpartyCounts = {};
       
       docs.forEach(doc => {
-        companyCounts[doc.company] = (companyCounts[doc.company] || 0) + 1;
+        counterpartyCounts[doc.counterparty] = (counterpartyCounts[doc.counterparty] || 0) + 1;
       });
 
       const total = docs.length;
       
-      this.statistics.topCompanies = Object.entries(companyCounts)
+      this.statistics.topCounterparties = Object.entries(counterpartyCounts)
         .map(([name, count]) => ({
           name,
           count,
           percentage: total > 0 ? Math.round((count / total) * 100) : 0
         }))
         .sort((a, b) => b.count - a.count)
-        .slice(0, 5); // Топ 5 компаний
+        .slice(0, 5);
     },
     calculateStatusDistribution(docs) {
       const statusCounts = {};

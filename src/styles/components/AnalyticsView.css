@@ -321,15 +321,15 @@
   text-align: right;
 }
 
-/* В CSS также нужно заменить классы */
-.company-item {
+/* Стили для контрагентов */
+.counterparty-item {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 8px 0;
 }
 
-.company-info {
+.counterparty-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -338,14 +338,14 @@
   gap: 15px;
 }
 
-.company-name {
+.counterparty-name {
   font-size: 14px;
   color: #2c3e50;
   font-weight: 500;
   flex: 1;
 }
 
-.company-count {
+.counterparty-count {
   font-size: 14px;
   color: #7f8c8d;
   font-weight: 600;
@@ -354,7 +354,7 @@
   text-align: right;
 }
 
-.company-bar {
+.counterparty-bar {
   flex: 1;
   height: 8px;
   background: #e9ecef;
@@ -364,14 +364,14 @@
   max-width: 150px;
 }
 
-.company-bar-fill {
+.counterparty-bar-fill {
   height: 100%;
   border-radius: 4px;
   transition: width 0.3s ease;
   background: linear-gradient(90deg, #9b59b6, #8e44ad);
 }
 
-.company-percentage {
+.counterparty-percentage {
   font-size: 12px;
   color: #7f8c8d;
   font-weight: 600;
