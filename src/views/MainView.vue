@@ -209,6 +209,75 @@
           </button>
         </div>
 
+        <!-- Настройки загрузки -->
+        <div class="upload-settings" v-if="uploadQueue.length > 0">
+          <div class="settings-section">
+            <h4>Настройки документов</h4>
+            
+            <div class="setting-group">
+              <label>Контрагент</label>
+              <input 
+                type="text" 
+                v-model="uploadCounterparty"
+                placeholder="Введите название контрагента"
+                class="setting-input"
+              >
+            </div>
+
+            <div class="setting-group">
+              <label>Статус</label>
+              <select v-model="uploadStatus" class="setting-select">
+                <option value="">Выберите статус</option>
+                <option v-for="status in availableStatuses" :key="status" :value="status">
+                  {{ status }}
+                </option>
+              </select>
+              <input 
+                v-if="uploadStatus === 'custom'"
+                type="text" 
+                v-model="customStatus"
+                placeholder="Введите свой статус"
+                class="setting-input"
+                style="margin-top: 8px;"
+              >
+            </div>
+            
+            <div class="setting-group">
+              <label>Теги</label>
+              <div class="tags-input-container">
+                <div class="selected-tags">
+                  <span 
+                    v-for="tag in uploadTags" 
+                    :key="tag"
+                    class="upload-tag"
+                  >
+                    {{ tag }}
+                    <span @click="removeUploadTag(tag)" class="remove-tag">×</span>
+                  </span>
+                </div>
+                <input 
+                  type="text" 
+                  v-model="newTag"
+                  @keydown.enter="addUploadTag"
+                  @keydown.backspace="handleBackspace"
+                  placeholder="Введите тег и нажмите Enter"
+                  class="tag-input"
+                >
+              </div>
+              <div class="tags-suggestions" v-if="tagSuggestions.length > 0 && newTag">
+                <div 
+                  v-for="suggestion in tagSuggestions"
+                  :key="suggestion"
+                  class="tag-suggestion"
+                  @click="selectTagSuggestion(suggestion)"
+                >
+                  {{ suggestion }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Список загружаемых файлов -->
         <div class="upload-list" v-if="uploadQueue.length > 0">
           <div class="upload-list-header">
@@ -239,6 +308,15 @@
               </div>
             </div>
           </div>
+
+          <div class="upload-actions">
+            <button @click="startUpload" class="btn btn-primary" :disabled="uploadQueue.some(f => f.status !== 'waiting')">
+              Начать загрузку
+            </button>
+            <button @click="clearUploadQueue" class="btn btn-outline">
+              Очистить очередь
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -258,308 +336,13 @@ export default {
       selectedType: '',
       selectedCounterparty: '',
       selectedTags: [],
-      documents: [
-        {
-          id: '264917',
-          title: 'Договор поставки',
-          filename: 'Договор №154/2024.pdf',
-          type: 'Договор поставки',
-          counterparty: 'ООО "Ромашка"',
-          date: '12.02.2024',
-          status: 'На оплате',
-          tags: ['Проект X', 'Юридический', 'Поставка']
-        },
-        {
-          id: '264918',
-          title: 'Счёт на оплату',
-          filename: 'Счёт №287.pdf',
-          type: 'Счёт',
-          counterparty: 'ООО "Вектор"',
-          date: '23.03.2024',
-          status: 'Оплачен',
-          tags: ['Финансовый', 'Срочный']
-        },
-        {
-          id: '264919',
-          title: 'Акт выполненных работ',
-          filename: 'Акт №45/2024.pdf',
-          type: 'Акт',
-          counterparty: 'ООО "Ромашка"',
-          date: '15.11.2024',
-          status: 'Подписан',
-          tags: ['Проект Y', 'Финансовый']
-        },
-        {
-          id: '264920',
-          title: 'Договор аренды',
-          filename: 'Договор №89/2024.pdf',
-          type: 'Договор аренды',
-          counterparty: 'ООО "Стройсервис"',
-          date: '05.08.2024',
-          status: 'Активен',
-          tags: ['Аренда', 'Юридический', 'Проект Z']
-        },
-        {
-          id: '264921',
-          title: 'Счёт на оплату',
-          filename: 'Счёт №301.pdf',
-          type: 'Счёт',
-          counterparty: 'ООО "Ромашка"',
-          date: '18.06.2024',
-          status: 'Ожидает оплаты',
-          tags: ['Финансовый', 'Проект X']
-        },
-        {
-          id: '264922',
-          title: 'Договор оказания услуг',
-          filename: 'Договор №201/2024.pdf',
-          type: 'Договор оказания услуг',
-          counterparty: 'ООО "ТехноПрофи"',
-          date: '10.04.2024',
-          status: 'Активен',
-          tags: ['Услуги', 'Технический', 'Проект Y']
-        },
-        {
-          id: '264923',
-          title: 'Акт приёма-передачи',
-          filename: 'Акт №67/2024.pdf',
-          type: 'Акт',
-          counterparty: 'ООО "Вектор"',
-          date: '22.05.2024',
-          status: 'Подписан',
-          tags: ['Передача', 'Юридический', 'Срочный']
-        },
-        {
-          id: '264924',
-          title: 'Дополнительное соглашение',
-          filename: 'ДС №12/2024.pdf',
-          type: 'Дополнительное соглашение',
-          counterparty: 'ООО "Ромашка"',
-          date: '30.07.2024',
-          status: 'Подписано',
-          tags: ['Юридический', 'Проект X', 'Изменения']
-        },
-        {
-          id: '264925',
-          title: 'Счёт-фактура',
-          filename: 'СФ №456.pdf',
-          type: 'Счёт-фактура',
-          counterparty: 'ООО "Стройсервис"',
-          date: '14.03.2024',
-          status: 'Оплачен',
-          tags: ['Финансовый', 'НДС', 'Бухгалтерия']
-        },
-        {
-          id: '264926',
-          title: 'Трудовой договор',
-          filename: 'ТД №78/2024.pdf',
-          type: 'Трудовой договор',
-          counterparty: 'ИП Сидоров А.В.',
-          date: '20.01.2024',
-          status: 'Активен',
-          tags: ['Кадровый', 'Сотрудник', 'Юридический']
-        },
-        {
-          id: '264927',
-          title: 'Авансовый отчёт',
-          filename: 'АО №23/2024.pdf',
-          type: 'Авансовый отчёт',
-          counterparty: 'ООО "Вектор"',
-          date: '08.09.2024',
-          status: 'Проведён',
-          tags: ['Финансовый', 'Аванс', 'Бухгалтерия']
-        },
-        {
-          id: '264928',
-          title: 'Договор подряда',
-          filename: 'Договор №302/2024.pdf',
-          type: 'Договор подряда',
-          counterparty: 'ООО "Строймастер"',
-          date: '25.04.2024',
-          status: 'Исполняется',
-          tags: ['Подряд', 'Строительство', 'Проект Z']
-        },
-        {
-          id: '264929',
-          title: 'Счёт на оплату',
-          filename: 'Счёт №512.pdf',
-          type: 'Счёт',
-          counterparty: 'ООО "ТехноПрофи"',
-          date: '17.10.2024',
-          status: 'Оплачен',
-          tags: ['Финансовый', 'Технический', 'Срочный']
-        },
-        {
-          id: '264930',
-          title: 'Акт сдачи-приёмки',
-          filename: 'Акт №89/2024.pdf',
-          type: 'Акт',
-          counterparty: 'ООО "Ромашка"',
-          date: '03.12.2024',
-          status: 'Подписан',
-          tags: ['Приёмка', 'Проект X', 'Завершён']
-        },
-        {
-          id: '264931',
-          title: 'Лицензионный договор',
-          filename: 'Договор №415/2024.pdf',
-          type: 'Лицензионный договор',
-          counterparty: 'ООО "СофтДев"',
-          date: '11.02.2024',
-          status: 'Активен',
-          tags: ['Лицензия', 'ИТ', 'Юридический']
-        },
-        {
-          id: '264932',
-          title: 'Счёт на оплату',
-          filename: 'Счёт №623.pdf',
-          type: 'Счёт',
-          counterparty: 'ООО "Вектор"',
-          date: '29.08.2024',
-          status: 'Просрочен',
-          tags: ['Финансовый', 'Просрочка', 'Срочный']
-        },
-        {
-          id: '264933',
-          title: 'Акт выполненных работ',
-          filename: 'Акт №156/2024.pdf',
-          type: 'Акт',
-          counterparty: 'ООО "Стройсервис"',
-          date: '19.07.2024',
-          status: 'Подписан',
-          tags: ['Строительство', 'Проект Z', 'Финансовый']
-        },
-        {
-          id: '264934',
-          title: 'Договор купли-продажи',
-          filename: 'Договор №278/2024.pdf',
-          type: 'Договор купли-продажи',
-          counterparty: 'ООО "Торговая компания"',
-          date: '07.05.2024',
-          status: 'Исполнен',
-          tags: ['Продажа', 'Юридический', 'Завершён']
-        },
-        {
-          id: '264935',
-          title: 'Счёт-фактура',
-          filename: 'СФ №789.pdf',
-          type: 'Счёт-фактура',
-          counterparty: 'ООО "Ромашка"',
-          date: '21.11.2024',
-          status: 'Ожидает оплаты',
-          tags: ['Финансовый', 'НДС', 'Проект Y']
-        },
-        {
-          id: '264936',
-          title: 'Агентский договор',
-          filename: 'Договор №334/2024.pdf',
-          type: 'Агентский договор',
-          counterparty: 'ООО "Маркетинг Про"',
-          date: '13.06.2024',
-          status: 'Активен',
-          tags: ['Агентство', 'Маркетинг', 'Юридический']
-        },
-        {
-          id: '264937',
-          title: 'Акт недостачи',
-          filename: 'Акт №44/2024.pdf',
-          type: 'Акт',
-          counterparty: 'ООО "Логистик"',
-          date: '26.09.2024',
-          status: 'На рассмотрении',
-          tags: ['Недостача', 'Проблемный', 'Срочный']
-        },
-        {
-          id: '264938',
-          title: 'Договор комиссии',
-          filename: 'Договор №189/2024.pdf',
-          type: 'Договор комиссии',
-          counterparty: 'ООО "Трейд"',
-          date: '04.03.2024',
-          status: 'Активен',
-          tags: ['Комиссия', 'Торговля', 'Юридический']
-        },
-        {
-          id: '264939',
-          title: 'Счёт на оплату',
-          filename: 'Счёт №401.pdf',
-          type: 'Счёт',
-          counterparty: 'ООО "Стройсервис"',
-          date: '16.12.2024',
-          status: 'Оплачен',
-          tags: ['Финансовый', 'Строительство', 'Проект Z']
-        },
-        {
-          id: '264940',
-          title: 'Акт сверки',
-          filename: 'Акт сверки №5/2024.pdf',
-          type: 'Акт сверки',
-          counterparty: 'ООО "Вектор"',
-          date: '28.02.2024',
-          status: 'Подписан',
-          tags: ['Сверка', 'Бухгалтерия', 'Финансовый']
-        },
-        {
-          id: '264941',
-          title: 'Договор займа',
-          filename: 'Договор №76/2024.pdf',
-          type: 'Договор займа',
-          counterparty: 'ООО "Финансы"',
-          date: '09.10.2024',
-          status: 'Исполняется',
-          tags: ['Займ', 'Финансовый', 'Юридический']
-        },
-        {
-          id: '264942',
-          title: 'Счёт на оплату',
-          filename: 'Счёт №555.pdf',
-          type: 'Счёт',
-          counterparty: 'ООО "Ромашка"',
-          date: '24.07.2024',
-          status: 'Оплачен',
-          tags: ['Финансовый', 'Проект X', 'Регулярный']
-        },
-        {
-          id: '264943',
-          title: 'Акт выполненных работ',
-          filename: 'Акт №201/2024.pdf',
-          type: 'Акт',
-          counterparty: 'ООО "ТехноПрофи"',
-          date: '31.08.2024',
-          status: 'Подписан',
-          tags: ['Технический', 'Проект Y', 'Завершён']
-        },
-        {
-          id: '264944',
-          title: 'Договор страхования',
-          filename: 'Договор №88/2024.pdf',
-          type: 'Договор страхования',
-          counterparty: 'Страховая компания "Щит"',
-          date: '12.01.2024',
-          status: 'Активен',
-          tags: ['Страхование', 'Юридический', 'Обязательный']
-        },
-        {
-          id: '264945',
-          title: 'Счёт-фактура',
-          filename: 'СФ №321.pdf',
-          type: 'Счёт-фактура',
-          counterparty: 'ООО "Строймастер"',
-          date: '05.11.2024',
-          status: 'Оплачен',
-          tags: ['Финансовый', 'НДС', 'Строительство']
-        },
-        {
-          id: '264946',
-          title: 'Акт приёма-передачи ОС',
-          filename: 'Акт №78/2024.pdf',
-          type: 'Акт',
-          counterparty: 'ООО "Вектор"',
-          date: '19.04.2024',
-          status: 'Подписан',
-          tags: ['Основные средства', 'Бухгалтерия', 'Юридический']
-        }
-      ],
+      // Настройки загрузки
+      uploadCounterparty: '',
+      uploadStatus: 'Новый',
+      customStatus: '',
+      uploadTags: [],
+      newTag: '',
+      documents: [],
       filteredDocuments: []
     }
   },
@@ -573,6 +356,23 @@ export default {
     availableTags() {
       const allTags = this.documents.flatMap(doc => doc.tags);
       return [...new Set(allTags)].sort();
+    },
+    availableStatuses() {
+      const statuses = [...new Set(this.documents.map(doc => doc.status))];
+      return [...statuses, 'custom'].sort();
+    },
+    tagSuggestions() {
+      if (!this.newTag) return [];
+      return this.availableTags.filter(tag => 
+        tag.toLowerCase().includes(this.newTag.toLowerCase()) && 
+        !this.uploadTags.includes(tag)
+      ).slice(0, 5);
+    },
+    finalUploadStatus() {
+      if (this.uploadStatus === 'custom') {
+        return this.customStatus || 'Новый';
+      }
+      return this.uploadStatus || 'Новый';
     }
   },
   methods: {
@@ -586,19 +386,13 @@ export default {
     // Методы для фильтрации
     filterDocuments() {
       this.filteredDocuments = this.documents.filter(document => {
-        // Поиск по тексту
         const searchMatch = !this.searchQuery || 
           document.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
           document.filename.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
           document.counterparty.toLowerCase().includes(this.searchQuery.toLowerCase());
         
-        // Фильтр по типу
         const typeMatch = !this.selectedType || document.type === this.selectedType;
-        
-        // Фильтр по контрагенту
         const counterpartyMatch = !this.selectedCounterparty || document.counterparty === this.selectedCounterparty;
-        
-        // Фильтр по тегам
         const tagsMatch = this.selectedTags.length === 0 || 
           this.selectedTags.every(tag => document.tags.includes(tag));
         
@@ -621,7 +415,7 @@ export default {
       this.filterDocuments();
     },
     
-    // Методы для загрузки документов
+    // Методы для загрузки документов с тегами
     triggerFileInput() {
       this.$refs.fileInput.click()
     },
@@ -649,7 +443,9 @@ export default {
         }
         this.uploadQueue.push(fileItem)
       })
-      
+    },
+    
+    startUpload() {
       this.processUploadQueue()
     },
     
@@ -672,26 +468,60 @@ export default {
     addNewDocument(fileItem) {
       const newDocument = {
         id: Date.now().toString(),
-        title: fileItem.name.replace(/\.[^/.]+$/, ""), // Убираем расширение файла
+        title: fileItem.name.replace(/\.[^/.]+$/, ""),
         filename: fileItem.name,
         type: this.guessDocumentType(fileItem.name),
-        counterparty: 'Новый контрагент',
+        counterparty: this.uploadCounterparty || 'Не указан',
         date: new Date().toLocaleDateString('ru-RU'),
-        status: 'Новый',
-        tags: ['Новый']
+        status: this.finalUploadStatus,
+        tags: [...this.uploadTags]
       };
       
       this.documents.unshift(newDocument);
       this.filterDocuments();
-      
-      // Автоматически выбираем новый документ
       this.selectedDocument = newDocument;
+    },
+
+    clearUploadQueue() {
+      this.uploadQueue = [];
+      this.uploadTags = [];
+      this.uploadCounterparty = '';
+      this.uploadStatus = 'Новый';
+      this.customStatus = '';
+      this.newTag = '';
+    },
+    
+    // Методы для работы с тегами при загрузке
+    addUploadTag() {
+      if (this.newTag.trim() && !this.uploadTags.includes(this.newTag.trim())) {
+        this.uploadTags.push(this.newTag.trim());
+        this.newTag = '';
+      }
+    },
+    
+    removeUploadTag(tag) {
+      this.uploadTags = this.uploadTags.filter(t => t !== tag);
+    },
+    
+    selectTagSuggestion(suggestion) {
+      if (!this.uploadTags.includes(suggestion)) {
+        this.uploadTags.push(suggestion);
+      }
+      this.newTag = '';
+    },
+    
+    handleBackspace(event) {
+      if (event.target.value === '' && this.uploadTags.length > 0) {
+        this.uploadTags.pop();
+      }
     },
     
     guessDocumentType(filename) {
       if (filename.includes('договор') || filename.includes('Договор')) return 'Договор';
       if (filename.includes('счет') || filename.includes('Счёт')) return 'Счёт';
       if (filename.includes('акт') || filename.includes('Акт')) return 'Акт';
+      if (filename.includes('отчёт') || filename.includes('Отчёт')) return 'Отчёт';
+      if (filename.includes('фактура') || filename.includes('Фактура')) return 'Счёт-фактура';
       return 'Другой';
     },
     
@@ -730,7 +560,6 @@ export default {
     }
   },
   mounted() {
-    // Инициализируем отфильтрованные документы
     this.filteredDocuments = [...this.documents];
     if (this.documents.length > 0) {
       this.selectedDocument = this.documents[0]
@@ -836,6 +665,175 @@ export default {
 
 .tags-list .tag.active {
   background: #1976d2;
+  color: white;
+}
+
+/* Стили для настроек загрузки */
+.upload-settings {
+  padding: 0 24px 24px;
+}
+
+.settings-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e1e5e9;
+}
+
+.settings-section h4 {
+  margin: 0 0 16px 0;
+  color: #2c3e50;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.setting-group {
+  margin-bottom: 16px;
+}
+
+.setting-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.setting-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.setting-input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+/* Стили для ввода тегов */
+.tags-input-container {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px;
+  background: white;
+  min-height: 44px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.upload-tag {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.remove-tag {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 1;
+  padding-left: 4px;
+}
+
+.remove-tag:hover {
+  color: #dc3545;
+}
+
+.tag-input {
+  border: none;
+  outline: none;
+  padding: 6px;
+  font-size: 14px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.tags-suggestions {
+  position: absolute;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-top: 4px;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 10;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tag-suggestion {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tag-suggestion:hover {
+  background: #f8f9fa;
+}
+
+.tag-suggestion:last-child {
+  border-bottom: none;
+}
+
+/* Стили для кнопок загрузки */
+.upload-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid #e1e5e9;
+  margin-top: 16px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: #3498db;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+.btn-primary:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  background: white;
+  color: #3498db;
+  border: 1px solid #3498db;
+}
+
+.btn-outline:hover {
+  background: #3498db;
   color: white;
 }
 </style>
